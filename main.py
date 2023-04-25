@@ -28,17 +28,18 @@ async def socks(interaction: discord.Interaction, ign: str):
     profile = get_skin(ign)
     url = profile[0]
     skin_mode = profile[1]
+    response = requests.get(url)
+    dst_image = Image.open(io.BytesIO(response.content))
 
-    if skin_mode == 'classic':
-        await interaction.channel.send("Sorry no support classic skin format :(")
+    if not dst_image.size == (64, 64):
+        await interaction.channel.send("Your skin is not 64x64 resolution")
     elif skin_mode == 0:
         await interaction.channel.send("No user by that name")
     else:
-        response = requests.get(url)
-        dst_image = Image.open(io.BytesIO(response.content))
+
         four_rectangles = [[8, 16, 12, 20],
                            [0, 26, 16, 32],
-                           [23, 48, 28, 52],
+                           [24, 48, 28, 52],
                            [15, 58, 32, 64]]
 
         for i, rectangle in enumerate(four_rectangles):
